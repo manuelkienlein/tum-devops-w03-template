@@ -14,8 +14,15 @@
     let meals: Meal[] = $state([]);
 
     // Fetch data once on component mount
+    async function fetchMeals() {
+     const res = await fetch(`${baseUrl}/mensa-garching/today`);
+     if (res.ok) {
+      meals = await res.json();
+     }
+    }
+    // Fetch data once on component mount
     onMount(async () => {
-       // TODO Fetch meals from the API running on the baseUrl
+     await fetchMeals();
     });
 </script>
 
@@ -31,6 +38,11 @@
         </div>
     {:else}
        <!-- TODO add food-grid here -->
+       <div class="food-grid">
+        {#each meals as meal}
+         <FoodCard {meal}/>
+        {/each}
+       </div>
     {/if}
 
     {#if meals.length === 0 && meals.length > 0}
